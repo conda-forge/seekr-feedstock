@@ -42,6 +42,11 @@ requirements:
     - networkx
     - pygt
     - openmm >=8              # not in pyproject.toml (not pip-installable) — added by hand
+    - radical.asyncflow
+    - rhapsody-py
+    - psutil
+    - opentelemetry-api
+    - opentelemetry-sdk
   run_constraints:
     # optional BD engines for k-on calculations; install alongside seekr, not as an extra
     - browndye >=1            # linux-64 only upstream
