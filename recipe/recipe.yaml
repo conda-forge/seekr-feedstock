@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: seekr            # conda-forge name; PyPI "seekr" is a different, unrelated package —
-  version: "3.2.0"       # if/when this is released to PyPI, use "seekr-kinetics" there instead
+  version: "3.3.0"       # if/when this is released to PyPI, use "seekr-kinetics" there instead
 
 package:
   name: ${{ name }}
@@ -10,15 +10,20 @@ package:
 
 source:
   url: https://github.com/seekrcentral/seekr/archive/refs/tags/${{ version }}.tar.gz
-  sha256: e0c8cb6a2e0cf4452156d911bbe21c20d3d9d6ec93c61d536770fafe8450ad3f
+  sha256: fc8ecfd67bcaac6d4a8a8b2cea8a6021d5f66e2c0cf283d6a41fac9474184d2d
   
 # used commands:
-# wget https://github.com/seekrcentral/seekr/archive/refs/tags/3.2.0.tar.gz
-# shasum -a 256 3.2.0.tar.gz
+# wget https://github.com/seekrcentral/seekr/archive/refs/tags/3.3.0.tar.gz
+# shasum -a 256 3.3.0.tar.gz
 
 build:
   noarch: python
-  script: ${{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  script:
+    # GitHub tag archives do not expand versioningit's $Format:%(describe)$
+    # placeholder unless pyproject.toml is marked export-subst. This
+    # fallback is used only when that detection fails.
+    - sed -i '/^\[tool.versioningit\]/a default-version = "${{ version }}"' pyproject.toml
+    - ${{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   number: 0
 
 requirements:
@@ -41,7 +46,7 @@ requirements:
     - pytest
     - networkx
     - pygt
-    - openmm >=8              # not in pyproject.toml (not pip-installable) — added by hand
+    - openmm >=8.3.0              # not in pyproject.toml (not pip-installable) — added by hand
     - radical.asyncflow
     - rhapsody-py
     - psutil
