@@ -18,7 +18,12 @@ source:
 
 build:
   noarch: python
-  script: ${{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  script:
+    # GitHub tag archives do not expand versioningit's $Format:%(describe)$
+    # placeholder unless pyproject.toml is marked export-subst. This
+    # fallback is used only when that detection fails.
+    - sed -i '/^\[tool.versioningit\]/a default-version = "${{ version }}"' pyproject.toml
+    - ${{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   number: 0
 
 requirements:
